@@ -1,29 +1,17 @@
 body {
-    background: #050816;
-    color: #f5e6c8;
-    font-family: 'Inter';
+    background: #0b0f2a;
+    color: white;
+    font-family: Arial;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
+.container {
+    max-width: 600px;
+    margin: auto;
     padding: 20px;
 }
 
-.logo {
-    font-family: 'Playfair Display';
-    font-size: 20px;
-}
-
-.hero {
-    max-width: 700px;
-    margin: auto;
-    padding: 40px;
-}
-
 h1 {
-    font-family: 'Playfair Display';
-    font-size: 40px;
+    text-align: center;
 }
 
 input, button {
@@ -36,12 +24,8 @@ input, button {
 
 button {
     background: gold;
-    cursor: pointer;
-}
-
-.signs {
-    margin-top: 20px;
-    font-size: 18px;
+    color: black;
+    font-weight: bold;
 }
 
 .result {
