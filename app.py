@@ -1,33 +1,50 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
+import swisseph as swe
+import datetime
 import os
 from openai import OpenAI
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
 
 app = Flask(__name__)
 
-# 🔑 OpenAI setup
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-# 🔮 AI Prediction
-def generate_prediction(name, dob, time, place):
+# 🔮 Get Rashi from longitude
+def get_rashi(longitude):
+    signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+             "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+    return signs[int(longitude / 30)]
+
+# 🌌 Calculate planetary positions
+def calculate_chart(dob, time, place):
+    date = datetime.datetime.strptime(dob + " " + time, "%d/%m/%Y %H:%M")
+
+    jd = swe.julday(date.year, date.month, date.day, date.hour)
+
+    sun = swe.calc_ut(jd, swe.SUN)[0][0]
+    moon = swe.calc_ut(jd, swe.MOON)[0][0]
+
+    sun_sign = get_rashi(sun)
+    moon_sign = get_rashi(moon)
+
+    return sun_sign, moon_sign
+
+# 🤖 AI Prediction
+def generate_prediction(name, dob, time, place, sun_sign, moon_sign):
     prompt = f"""
-You are a highly skilled Vedic astrologer.
+You are a Vedic astrologer.
 
-Give a detailed structured 5-year prediction:
+User:
+{name}, born on {dob} at {time}, {place}
 
-1 Year, 2 Year, 3 Year, 4 Year, 5 Year
+Sun Sign: {sun_sign}
+Moon Sign: {moon_sign}
 
-Focus on:
+Give a structured 5-year prediction:
 - Career
 - Wealth
 - Marriage
 
-User:
-Name: {name}
-DOB: {dob}
-Time: {time}
-Place: {place}
+Year-wise breakdown.
 """
 
     response = client.chat.completions.create(
@@ -37,55 +54,31 @@ Place: {place}
 
     return response.choices[0].message.content
 
-
-# 📄 PDF Generator
-def create_pdf(text):
-    file_path = "report.pdf"
-    doc = SimpleDocTemplate(file_path)
-    styles = getSampleStyleSheet()
-
-    content = []
-    for line in text.split("\n"):
-        content.append(Paragraph(line, styles["Normal"]))
-
-    doc.build(content)
-    return file_path
-
-
-# 🏠 Main Route
+# 🏠 Route
 @app.route('/', methods=['GET', 'POST'])
 def home():
     prediction = ""
+    sun_sign = ""
+    moon_sign = ""
 
     if request.method == 'POST':
-        name = request.form.get('name')
-        dob = request.form.get('dob')
-        time = request.form.get('time')
-        place = request.form.get('place')
+        name = request.form['name']
+        dob = request.form['dob']
+        time = request.form['time']
+        place = request.form['place']
 
-        prediction = generate_prediction(name, dob, time, place)
+        sun_sign, moon_sign = calculate_chart(dob, time, place)
 
-        # Save to session-like variable
-        with open("last_report.txt", "w") as f:
-            f.write(prediction)
+        prediction = generate_prediction(
+            name, dob, time, place, sun_sign, moon_sign
+        )
 
-    return render_template('index.html', prediction=prediction)
+    return render_template("index.html",
+                           prediction=prediction,
+                           sun_sign=sun_sign,
+                           moon_sign=moon_sign)
 
-
-# 📥 Download PDF
-@app.route('/download')
-def download():
-    if os.path.exists("last_report.txt"):
-        with open("last_report.txt", "r") as f:
-            text = f.read()
-    else:
-        text = "No report generated yet."
-
-    pdf = create_pdf(text)
-    return send_file(pdf, as_attachment=True)
-
-
-# 🚀 Run (Render compatible)
+# 🚀 Run
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
