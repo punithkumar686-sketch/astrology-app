@@ -3,3 +3,4 @@ gunicorn
 openai
 pyswisseph
 reportlab
+requests
