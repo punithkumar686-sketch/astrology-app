@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Astrology Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔮 Astrology Predictor</h1>
+
+    <form method="POST">
+        <input type="text" name="dob" placeholder="Date of Birth (dd/mm/yyyy)" required>
+        <input type="text" name="time" placeholder="Time (hh:mm)" required>
+        <input type="text" name="place" placeholder="Place" required>
+        <button type="submit">Get Prediction</button>
+    </form>
+
+    <div class="result">
+        {{ prediction }}
+    </div>
+</div>
+
+</body>
+</html>
