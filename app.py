@@ -3,36 +3,73 @@ import os
 
 app = Flask(__name__)
 
-def generate_prediction(dob, time, place):
+# 🔮 Prediction Function
+def generate_prediction(name, dob, time, place):
     return f"""
-🔮 Astrology Report
+🔮 Astrology Report for {name}
 
-DOB: {dob}
+Birth Details:
+Date: {dob}
 Time: {time}
 Place: {place}
 
-Career:
-Strong growth in next 2–3 years.
+━━━━━━━━━━━━━━━━━━━━━
 
-Wealth:
-Gradual increase, peak around year 3.
+📅 1-Year Forecast:
+Career: Steady progress with new opportunities.
+Wealth: Stable income, avoid risky investments.
+Marriage: Possible developments in relationships.
 
-Marriage:
-Likely between 2–4 years window.
+━━━━━━━━━━━━━━━━━━━━━
+
+📅 2-Year Forecast:
+Career: Growth phase begins, chances of promotion/job switch.
+Wealth: Increase in earnings.
+Marriage: Strong possibility of commitment.
+
+━━━━━━━━━━━━━━━━━━━━━
+
+📅 3-Year Forecast:
+Career: Major breakthrough or business success.
+Wealth: Peak earning phase.
+Marriage: Highly favorable for marriage.
+
+━━━━━━━━━━━━━━━━━━━━━
+
+📅 4-Year Forecast:
+Career: Stability and leadership role.
+Wealth: Savings and asset building.
+Marriage: Harmonious family life.
+
+━━━━━━━━━━━━━━━━━━━━━
+
+📅 5-Year Forecast:
+Career: Long-term success and recognition.
+Wealth: Strong financial stability.
+Marriage: Settled and supportive partnership.
+
+━━━━━━━━━━━━━━━━━━━━━
+
+✨ Overall Guidance:
+Focus on consistent effort, avoid impulsive decisions, and build long-term assets.
 """
 
+# 🏠 Home Route
 @app.route('/', methods=['GET', 'POST'])
 def home():
     prediction = ""
+
     if request.method == 'POST':
-        dob = request.form['dob']
-        time = request.form['time']
-        place = request.form['place']
-        prediction = generate_prediction(dob, time, place)
+        name = request.form.get('name')
+        dob = request.form.get('dob')
+        time = request.form.get('time')
+        place = request.form.get('place')
+
+        prediction = generate_prediction(name, dob, time, place)
 
     return render_template('index.html', prediction=prediction)
 
-# ✅ ONLY ONE RUN BLOCK (IMPORTANT)
+# 🚀 Run App (Local + Render Compatible)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # Render uses this
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
