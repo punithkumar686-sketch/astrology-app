@@ -29,31 +29,27 @@ def calculate_chart(dob, time, place):
     return sun_sign, moon_sign
 
 # 🤖 AI Prediction
-def generate_prediction(name, dob, time, place, sun_sign, moon_sign):
+def generate_prediction(name, dob, time, place, sun_sign):
     prompt = f"""
-You are a Vedic astrologer.
-
-User:
-{name}, born on {dob} at {time}, {place}
-
+User: {name}
+DOB: {dob}, Time: {time}, Place: {place}
 Sun Sign: {sun_sign}
-Moon Sign: {moon_sign}
 
-Give a structured 5-year prediction:
-- Career
-- Wealth
-- Marriage
-
-Year-wise breakdown.
+Give 5-year prediction:
+Career, Wealth, Marriage
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
 
-    return response.choices[0].message.content
-
+    except Exception as e:
+        print("ERROR:", e)  # shows in Render logs
+        return "⚠️ Prediction temporarily unavailable. Please try again later."
+        
 # 🏠 Route
 @app.route('/', methods=['GET', 'POST'])
 def home():
