@@ -1,30 +1,25 @@
-import os
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
-
 from flask import Flask, render_template, request
+import os
 
 app = Flask(__name__)
 
 def generate_prediction(dob, time, place):
     return f"""
-    🔮 Astrology Report
+🔮 Astrology Report
 
-    DOB: {dob}
-    Time: {time}
-    Place: {place}
+DOB: {dob}
+Time: {time}
+Place: {place}
 
-    Career:
-    Strong growth in next 2–3 years.
+Career:
+Strong growth in next 2–3 years.
 
-    Wealth:
-    Gradual increase, peak around year 3.
+Wealth:
+Gradual increase, peak around year 3.
 
-    Marriage:
-    Likely between 2–4 years window.
-    """
+Marriage:
+Likely between 2–4 years window.
+"""
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -37,5 +32,7 @@ def home():
 
     return render_template('index.html', prediction=prediction)
 
+# ✅ ONLY ONE RUN BLOCK (IMPORTANT)
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Render uses this
+    app.run(host="0.0.0.0", port=port)
