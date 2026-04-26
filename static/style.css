@@ -1,17 +1,29 @@
 body {
-    background: radial-gradient(circle, #0a0f2c, #000);
+    background: #050816;
     color: #f5e6c8;
     font-family: 'Inter';
 }
 
-.container {
-    max-width: 500px;
-    margin: auto;
+.navbar {
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
+}
+
+.logo {
+    font-family: 'Playfair Display';
+    font-size: 20px;
+}
+
+.hero {
+    max-width: 700px;
+    margin: auto;
+    padding: 40px;
 }
 
 h1 {
     font-family: 'Playfair Display';
+    font-size: 40px;
 }
 
 input, button {
@@ -25,16 +37,15 @@ input, button {
 button {
     background: gold;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px gold;
+.signs {
+    margin-top: 20px;
+    font-size: 18px;
 }
 
 .result {
+    margin-top: 20px;
     background: #111;
     padding: 15px;
-    border-radius: 10px;
 }
