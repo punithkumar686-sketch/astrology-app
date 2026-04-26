@@ -4,76 +4,70 @@
     <title>Jyotish Reading</title>
     <link rel="stylesheet" href="/static/style.css">
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter&display=swap" rel="stylesheet">
-
-    <!-- Flatpickr (Date + Time Picker) -->
+    <!-- Calendar -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
 
-<div class="navbar">
-    <div class="logo">Jyotish</div>
-    <button class="cta">Begin Reading</button>
-</div>
-
 <div class="container">
 
-    <h2 class="subtitle">ज्योतिष</h2>
+    <h1>🔮 Astrology Reading</h1>
 
-    <h1>
-        A five-year reading,<br>
-        drawn from the stars<br>
-        you were born under.
-    </h1>
-
-    <p class="desc">
-        Enter your birth details for a personalized forecast on career, wealth and marriage.
-    </p>
-
-    <form method="POST" class="form">
+    <form method="POST">
 
         <input type="text" name="name" placeholder="Full Name" required>
 
-        <input type="text" id="dob" name="dob" placeholder="Select Date of Birth" required>
+        <input type="text" id="dob" name="dob" placeholder="Date of Birth" required>
 
-        <input type="text" id="time" name="time" placeholder="Select Time" required>
+        <input type="text" id="time" name="time" placeholder="Time" required>
 
-        <input type="text" id="place" name="place" placeholder="Enter Birth Place" required>
+        <input type="text" name="place" placeholder="Place of Birth" required>
 
-        <button type="submit">Generate Reading</button>
+        <button type="submit">Generate Report</button>
     </form>
 
     <div class="result">
         <pre>{{ prediction }}</pre>
     </div>
 
+    <a href="/download">
+        <button class="download">Download PDF</button>
+    </a>
+
+    <!-- Payment -->
+    <button id="pay-btn">Pay ₹99</button>
+
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-    flatpickr("#dob", {
-        dateFormat: "d/m/Y"
-    });
-
-    flatpickr("#time", {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i"
-    });
+flatpickr("#dob", {dateFormat: "d/m/Y"});
+flatpickr("#time", {enableTime: true, noCalendar: true, dateFormat: "H:i"});
 </script>
 
-    <script>
-function initAutocomplete() {
-    const input = document.getElementById("place");
-    new google.maps.places.Autocomplete(input);
+<!-- Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.getElementById('pay-btn').onclick = function () {
+    var options = {
+        "key": "YOUR_RAZORPAY_KEY",
+        "amount": "9900",
+        "currency": "INR",
+        "name": "Astrology Report",
+        "description": "5-Year Prediction",
+        "handler": function () {
+            alert("Payment Successful!");
+        }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
 }
-google.maps.event.addDomListener(window, 'load', initAutocomplete);
 </script>
 
 </body>
