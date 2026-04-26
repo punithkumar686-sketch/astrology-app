@@ -4,6 +4,8 @@ import os
 
 app = Flask(__name__)
 
+
+
 # 🔑 API KEYS
 OPENCAGE_KEY = "YOUR_OPENCAGE_KEY"
 ASTRO_USER = "YOUR_ASTROLOGY_API_USER"
