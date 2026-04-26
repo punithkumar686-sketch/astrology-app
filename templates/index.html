@@ -1,53 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jyotish</title>
+    <title>Jyotish AI</title>
     <link rel="stylesheet" href="/static/style.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <div class="navbar">
-    <div class="logo">Jyotish</div>
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/">New Reading</a>
-    </div>
+    <h2>Jyotish AI</h2>
+    <a href="/">Home</a>
 </div>
 
 <div class="hero">
-    <h1>
-        A five-year reading,<br>
-        drawn from the stars<br>
-        you were born under.
-    </h1>
-
-    <p>Enter your birth details below</p>
+    <h1>Your Destiny, Written in the Stars</h1>
 
     <form method="POST">
-
         <input name="name" placeholder="Full Name" required>
-        <input type="date" name="dob">
-        <input name="time" placeholder="HH:MM (24hr)" required>
-        <input name="place" placeholder="Place" required>
+        <input type="date" name="dob" required>
+        <input type="time" name="time" required>
+        <input name="place" placeholder="Birth Place" required>
 
-        <button type="submit">Begin Reading</button>
+        <button type="submit">Generate Kundli</button>
     </form>
-
-    {% if sun_sign %}
-    <div class="signs">
-        ☀ Sun Sign: {{ sun_sign }} <br>
-        🌙 Moon Sign: {{ moon_sign }}
-    </div>
-    {% endif %}
-
-    <div class="result">
-        <pre>{{ prediction }}</pre>
-    </div>
-
 </div>
+
+{% if data %}
+<div class="result">
+    <h2>{{ data.name }}'s Kundli</h2>
+
+    {% for planet in data.kundli %}
+        <div class="card">
+            <h3>{{ planet.name }}</h3>
+            <p>Sign: {{ planet.sign }}</p>
+            <p>Degree: {{ planet.normDegree }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 </body>
 </html>
