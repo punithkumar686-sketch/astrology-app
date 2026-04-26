@@ -4,6 +4,8 @@
     <title>Jyotish Reading</title>
     <link rel="stylesheet" href="/static/style.css">
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter&display=swap" rel="stylesheet">
 
@@ -64,6 +66,14 @@
         noCalendar: true,
         dateFormat: "H:i"
     });
+</script>
+
+    <script>
+function initAutocomplete() {
+    const input = document.getElementById("place");
+    new google.maps.places.Autocomplete(input);
+}
+google.maps.event.addDomListener(window, 'load', initAutocomplete);
 </script>
 
 </body>
