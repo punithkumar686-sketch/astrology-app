@@ -8,8 +8,8 @@ app = Flask(__name__)
 
 # 🔑 API KEYS
 OPENCAGE_KEY = os.environ.get("OPENCAGE_KEY")
-ASTRO_USER = "YOUR_ASTROLOGY_API_USER"
-ASTRO_KEY = "YOUR_ASTROLOGY_API_KEY"
+ASTRO_USER = os.environ.get("ASTRO_USER")
+ASTRO_KEY = os.environ.get("ASTRO_KEY")
 
 # 📍 Get Lat Long
 def get_lat_long(place):
