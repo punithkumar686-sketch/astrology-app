@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 # 🔑 API KEYS
-OPENCAGE_KEY = "YOUR_OPENCAGE_KEY"
+OPENCAGE_KEY = os.environ.get("OPENCAGE_KEY")
 ASTRO_USER = "YOUR_ASTROLOGY_API_USER"
 ASTRO_KEY = "YOUR_ASTROLOGY_API_KEY"
 
@@ -21,6 +21,8 @@ def get_lat_long(place):
         lng = res["results"][0]["geometry"]["lng"]
         return lat, lng
     return None, None
+
+print(OPENCAGE_KEY)
 
 # 🔮 Get Kundli Data
 def get_kundli(dob, time, lat, lng):
