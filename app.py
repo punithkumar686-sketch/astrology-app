@@ -4,69 +4,104 @@ import os
 
 app = Flask(__name__)
 
-
-
-# 🔑 API KEYS
+# 🔐 ENV VARIABLES (SET IN RENDER)
 OPENCAGE_KEY = os.environ.get("OPENCAGE_KEY")
 ASTRO_USER = os.environ.get("ASTRO_USER")
 ASTRO_KEY = os.environ.get("ASTRO_KEY")
 
-# 📍 Get Lat Long
+# 📍 GET LATITUDE & LONGITUDE FROM PLACE
 def get_lat_long(place):
-    url = f"https://api.opencagedata.com/geocode/v1/json?q={place}&key={OPENCAGE_KEY}"
-    res = requests.get(url).json()
+    try:
+        url = f"https://api.opencagedata.com/geocode/v1/json?q={place}&key={OPENCAGE_KEY}"
+        response = requests.get(url).json()
 
-    if res["results"]:
-        lat = res["results"][0]["geometry"]["lat"]
-        lng = res["results"][0]["geometry"]["lng"]
-        return lat, lng
-    return None, None
+        if response["results"]:
+            lat = response["results"][0]["geometry"]["lat"]
+            lng = response["results"][0]["geometry"]["lng"]
+            return lat, lng
 
-print(OPENCAGE_KEY)
+        return None, None
 
-# 🔮 Get Kundli Data
+    except Exception as e:
+        print("OpenCage Error:", e)
+        return None, None
+
+
+# 🔮 GET KUNDLI (PLANETS)
 def get_kundli(dob, time, lat, lng):
-    day, month, year = map(int, dob.split("-"))
-    hour, minute = map(int, time.split(":"))
+    try:
+        year, month, day = map(int, dob.split("-"))
+        hour, minute = map(int, time.split(":"))
 
-    url = "https://json.astrologyapi.com/v1/planets"
+        url = "https://json.astrologyapi.com/v1/planets"
 
-    payload = {
-        "day": day,
-        "month": month,
-        "year": year,
-        "hour": hour,
-        "min": minute,
-        "lat": lat,
-        "lon": lng,
-        "tzone": 5.5
-    }
+        payload = {
+            "day": day,
+            "month": month,
+            "year": year,
+            "hour": hour,
+            "min": minute,
+            "lat": lat,
+            "lon": lng,
+            "tzone": 5.5
+        }
 
-    response = requests.post(url, json=payload, auth=(ASTRO_USER, ASTRO_KEY))
+        response = requests.post(
+            url,
+            json=payload,
+            auth=(ASTRO_USER, ASTRO_KEY)
+        )
 
-    return response.json()
+        data = response.json()
+
+        print("KUNDLI DATA:", data)  # debug
+
+        return data
+
+    except Exception as e:
+        print("Astrology API Error:", e)
+        return None
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    data = None
+    kundli_data = None
+    error = None
 
     if request.method == "POST":
-        name = request.form["name"]
-        dob = request.form["dob"]
-        time = request.form["time"]
-        place = request.form["place"]
+        name = request.form.get("name")
+        dob = request.form.get("dob")
+        time = request.form.get("time")
+        place = request.form.get("place")
 
+        # Step 1: Get location
         lat, lng = get_lat_long(place)
 
-        if lat and lng:
+        if not lat or not lng:
+            error = "❌ Could not fetch location. Try another city."
+        else:
+            # Step 2: Get kundli
             kundli = get_kundli(dob, time, lat, lng)
-            data = {
-                "name": name,
-                "kundli": kundli
-            }
 
-    return render_template("index.html", data=data)
+            if not kundli or isinstance(kundli, dict) and kundli.get("error"):
+                error = "⚠️ Kundli API failed (check API keys or trial limit)."
+            else:
+                kundli_data = {
+                    "name": name,
+                    "place": place,
+                    "dob": dob,
+                    "time": time,
+                    "planets": kundli
+                }
 
+    return render_template(
+        "index.html",
+        kundli_data=kundli_data,
+        error=error
+    )
+
+
+# 🚀 RUN SERVER
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
