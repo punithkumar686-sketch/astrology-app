@@ -12,16 +12,15 @@ def get_sign(deg):
     return SIGNS[int(deg / 30)]
 
 
-# 🌍 REAL LAGNA + PLANETS
+# 🌍 REAL LAGNA + PLANETS ENGINE (UPGRADED)
 def calculate_chart(dob, tob, lat=12.9716, lon=77.5946):
     dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
 
     jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute/60)
 
-    # 🏠 REAL ASCENDANT (LAGNA)
+    # 🏠 ASCENDANT (LAGNA)
     houses, ascmc = swe.houses(jd, lat, lon)
     lagna_deg = ascmc[0]
-    lagna_sign = get_sign(lagna_deg)
 
     # 🪐 PLANETS
     planets = {
@@ -36,6 +35,8 @@ def calculate_chart(dob, tob, lat=12.9716, lon=77.5946):
 
     result = {}
 
+    moon_degree = None  # 🔥 IMPORTANT FOR DASHA SYSTEM
+
     for name, p in planets.items():
         pos, _ = swe.calc_ut(jd, p)
         deg = pos[0]
@@ -45,7 +46,12 @@ def calculate_chart(dob, tob, lat=12.9716, lon=77.5946):
             "sign": get_sign(deg)
         }
 
+        # 🌙 capture Moon separately
+        if name == "Moon":
+            moon_degree = deg
+
     return result, {
         "lagna_degree": round(lagna_deg, 2),
-        "lagna_sign": lagna_sign
+        "lagna_sign": get_sign(lagna_deg),
+        "moon_degree": moon_degree  # 🔥 REQUIRED FOR NAKSHATRA DASHA
     }
