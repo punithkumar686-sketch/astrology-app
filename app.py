@@ -1,11 +1,5 @@
-import os
-
-
 from flask import Flask, render_template, request
 from astro.charts import build_kundli
-from astro.match import compatibility_score
-from astro.dasha import get_dasha
-from astro.bhava import build_bhava_chart
 
 app = Flask(__name__)
 
@@ -20,30 +14,24 @@ def chart():
     dob = request.form.get("dob")
     tob = request.form.get("tob")
 
-    lagna, planets = get_kundli(dob, tob)
+    planets, lagna = build_kundli(dob, tob)
 
-bhava_chart = build_bhava_chart(planets)
+    return render_template(
+        "chart.html",
+        planets=planets,
+        lagna=lagna
+    )
 
-return render_template(
-    "chart.html",
-    lagna=lagna,
-    planets=planets,
-    bhava=bhava_chart
-)
+
 @app.route("/match")
 def match():
-    score, status = compatibility_score()
-    return render_template("match.html", score=score, status=status)
+    return render_template("match.html")
 
 
 @app.route("/dasha")
 def dasha():
-    data = get_dasha()
-    return render_template("dasha.html", dasha=data)
-
-
+    return render_template("dasha.html")
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
