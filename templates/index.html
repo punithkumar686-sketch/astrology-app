@@ -1,11 +1,5 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-<div class="box">
-    <h2>🪐 Real Vedic Astrology App</h2>
-    <p>Generate real planetary 12-house Kundli chart.</p>
-    <a href="/chart">👉 View Kundli Chart</a>
-</div>
-
-{% endblock %}
+<form action="/chart" method="POST">
+    <input name="dob" placeholder="YYYY-MM-DD">
+    <input name="tob" placeholder="HH:MM">
+    <button type="submit">Generate Kundli</button>
+</form>
