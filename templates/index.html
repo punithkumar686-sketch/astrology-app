@@ -1,76 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Astrology App</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: white;
-        }
-
-        .header {
-            background: orange;
-            color: white;
-            text-align: center;
-            padding: 25px;
-        }
-
-        .container {
-            max-width: 420px;
-            margin: auto;
-            padding: 30px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid orange;
-            border-radius: 6px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: orange;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: darkorange;
-        }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <h1>🪐 ASTROLOGY APP</h1>
+{% block content %}
+<div class="card">
+    <h2>🪐 Welcome to Astrology App</h2>
+    <p>Generate Kundli, View 12 House Chart, Match Making & Dasha analysis.</p>
 </div>
-
-<div class="container">
-
-    <form method="POST" action="/kundli">
-
-        <label>Date of Birth</label>
-        <input type="date" name="dob" required>
-
-        <label>Time of Birth</label>
-        <input type="time" name="tob" required>
-
-        <label>Place of Birth</label>
-        <input type="text" name="place" required>
-
-        <button type="submit">Generate Kundli</button>
-
-    </form>
-
-</div>
-
-</body>
-</html>
+{% endblock %}
