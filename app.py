@@ -14,9 +14,13 @@ def chart():
     dob = request.form.get("dob")
     tob = request.form.get("tob")
 
-    planets, lagna = build_kundli(dob, tob)
+    houses, lagna = build_kundli(dob, tob)
 
-    return render_template("chart.html", planets=planets, lagna=lagna)
+    return render_template(
+        "chart.html",
+        houses=houses,
+        lagna=lagna
+    )
 
 
 @app.route("/match")
