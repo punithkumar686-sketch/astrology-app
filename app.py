@@ -4,9 +4,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Set ephemeris path (important)
+# Swiss Ephemeris setup
 swe.set_ephe_path('.')
 
+# Planets
 PLANETS = {
     "Sun": swe.SUN,
     "Moon": swe.MOON,
@@ -25,40 +26,47 @@ SIGNS = [
 def get_sign(deg):
     return SIGNS[int(deg / 30)]
 
-def generate_kundli(dob, tob):
+# 🔮 REAL KUNDLI GENERATOR
+def generate_kundli(dob, tob, place):
     dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
 
     jd = swe.julday(
         dt.year, dt.month, dt.day,
-        dt.hour + dt.minute / 60.0
+        dt.hour + dt.minute / 60
     )
 
-    result = []
+    chart = []
 
     for name, planet in PLANETS.items():
         pos, _ = swe.calc_ut(jd, planet)
         deg = pos[0]
         sign = get_sign(deg)
 
-        result.append(f"{name}: {deg:.2f}° → {sign}")
+        chart.append({
+            "planet": name,
+            "degree": round(deg, 2),
+            "sign": sign
+        })
 
-    return "\n".join(result)
+    return chart
 
 
+# 🏠 Home Page
 @app.route("/")
 def home():
-    return render_template("form.html")
+    return render_template("index.html")
 
 
+# 🔮 Result Page
 @app.route("/kundli", methods=["POST"])
 def kundli():
-    dob = request.form.get("date_of_birth")
-    tob = request.form.get("time_of_birth")
+    dob = request.form.get("dob")
+    tob = request.form.get("tob")
     place = request.form.get("place")
 
-    chart = generate_kundli(dob, tob)
+    chart = generate_kundli(dob, tob, place)
 
-    return render_template("result.html", result=chart, place=place)
+    return render_template("result.html", chart=chart, place=place)
 
 
 if __name__ == "__main__":
