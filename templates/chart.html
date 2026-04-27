@@ -25,6 +25,22 @@
     {% endfor %}
     <hr>
 </div>
+
+<h2>🪐 Lagna (Ascendant)</h2>
+<p>{{ lagna.lagna_sign }} ({{ lagna.lagna_degree }}°)</p>
+
+<h2>🏠 Bhava Chart</h2>
+
+{% for house, planets in houses.items() %}
+<div style="margin-bottom:10px;">
+    <b>{{ house }}</b><br>
+    {% for p in planets %}
+        {{ p }}<br>
+    {% endfor %}
+</div>
+<hr>
+{% endfor %}
+    
 {% endfor %}
 {% endfor %}
 
