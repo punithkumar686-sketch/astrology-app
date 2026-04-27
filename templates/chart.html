@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>🏠 12 House Kundli Chart (D1)</h2>
+
+<div class="grid">
+
+    {% for house, planet in chart.items() %}
+    <div class="card">
+        <b>{{ house }}</b><br>
+        {{ planet }}
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
