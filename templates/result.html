@@ -2,19 +2,63 @@
 <html>
 <head>
     <title>Kundli Result</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: white;
+        }
+
+        .header {
+            background: orange;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            border: 2px solid orange;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: orange;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<h2>🪐 Real Kundli Chart</h2>
+<div class="header">
+    <h1>🪐 Kundli Report</h1>
+</div>
 
-<p><b>Place:</b> {{ place }}</p>
+<div class="container">
 
-<pre style="font-size:16px; line-height:1.6;">
-{{ result }}
-</pre>
+    <h3>📍 Place: {{ place }}</h3>
 
-<br>
-<a href="/">🔙 Back</a>
+    {% for item in chart %}
+        <div class="card">
+            <b>{{ item.planet }}</b><br>
+            {{ item.degree }}° → {{ item.sign }}
+        </div>
+    {% endfor %}
+
+    <a href="/">🔙 Generate Again</a>
+
+</div>
 
 </body>
 </html>
