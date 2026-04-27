@@ -16,11 +16,7 @@ def chart():
 
     planets, lagna = build_kundli(dob, tob)
 
-    return render_template(
-        "chart.html",
-        planets=planets,
-        lagna=lagna
-    )
+    return render_template("chart.html", planets=planets, lagna=lagna)
 
 
 @app.route("/match")
