@@ -1,29 +1,35 @@
-def generate_kundli():
-    year, month, day = 1994, 3, 27
-    hour, minute = 12, 32
+from flask import Flask, render_template, request
+from astro.charts import build_chart
+from astro.dasha import get_dasha
 
-    jd = swe.julday(year, month, day, hour + minute / 60)
+app = Flask(__name__)
 
-    planets_data = {}
 
-    for name, planet in PLANETS.items():
-        result = swe.calc_ut(jd, planet)
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-        deg = result[0][0] if isinstance(result[0], (list, tuple)) else result[0]
 
-        sign = get_sign(deg)
+@app.route("/chart", methods=["POST"])
+def chart():
+    dob = request.form.get("dob")
+    tob = request.form.get("tob")
 
-        planets_data[name] = {
-            "degree": round(deg, 2),
-            "sign": sign
-        }
+    kundli = build_chart(dob, tob)
 
-    house_chart = {h: [] for h in HOUSES}
+    return render_template("chart.html", kundli=kundli)
 
-    i = 0
-    for planet, data in planets_data.items():
-        house = HOUSES[i % 12]
-        house_chart[house].append(f"{planet} ({data['sign']})")
-        i += 2
 
-    return house_chart
+@app.route("/match")
+def match():
+    return render_template("match.html")
+
+
+@app.route("/dasha")
+def dasha():
+    data = get_dasha()
+    return render_template("dasha.html", dasha=data)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
