@@ -1,73 +1,54 @@
 from flask import Flask, render_template, request
-import swisseph as swe
-from datetime import datetime
 
 app = Flask(__name__)
 
-# Swiss Ephemeris setup
-swe.set_ephe_path('.')
+# Dummy kundli data (we will upgrade later to real ephemeris)
+def generate_chart():
+    houses = [
+        "Asc", "2H", "3H", "4H",
+        "5H", "6H", "7H", "8H",
+        "9H", "10H", "11H", "12H"
+    ]
 
-# Planets
-PLANETS = {
-    "Sun": swe.SUN,
-    "Moon": swe.MOON,
-    "Mars": swe.MARS,
-    "Mercury": swe.MERCURY,
-    "Jupiter": swe.JUPITER,
-    "Venus": swe.VENUS,
-    "Saturn": swe.SATURN,
-}
+    planets = [
+        "Sun", "Moon", "Mars", "Mercury",
+        "Jupiter", "Venus", "Saturn"
+    ]
 
-SIGNS = [
-    "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
-    "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"
-]
+    chart = {}
 
-def get_sign(deg):
-    return SIGNS[int(deg / 30)]
-
-# 🔮 REAL KUNDLI GENERATOR
-def generate_kundli(dob, tob, place):
-    dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
-
-    jd = swe.julday(
-        dt.year, dt.month, dt.day,
-        dt.hour + dt.minute / 60
-    )
-
-    chart = []
-
-    for name, planet in PLANETS.items():
-        pos, _ = swe.calc_ut(jd, planet)
-        deg = pos[0]
-        sign = get_sign(deg)
-
-        chart.append({
-            "planet": name,
-            "degree": round(deg, 2),
-            "sign": sign
-        })
+    for i, house in enumerate(houses):
+        chart[house] = planets[i % len(planets)]
 
     return chart
 
 
-# 🏠 Home Page
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# 🔮 Result Page
-@app.route("/kundli", methods=["POST"])
+@app.route("/kundli")
 def kundli():
-    dob = request.form.get("dob")
-    tob = request.form.get("tob")
-    place = request.form.get("place")
+    chart = generate_chart()
+    return render_template("kundli.html", chart=chart)
 
-    chart = generate_kundli(dob, tob, place)
 
-    return render_template("result.html", chart=chart, place=place)
+@app.route("/chart")
+def chart():
+    chart = generate_chart()
+    return render_template("chart.html", chart=chart)
+
+
+@app.route("/match")
+def match():
+    return render_template("match.html")
+
+
+@app.route("/dasha")
+def dasha():
+    return render_template("dasha.html")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
