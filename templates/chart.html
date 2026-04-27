@@ -15,6 +15,17 @@
     {% endfor %}
 
 </div>
+    <h2>🏠 Bhava Chart</h2>
+
+{% for house, planets in bhava.items() %}
+<div>
+    <b>{{ house }}</b><br>
+    {% for p in planets %}
+        {{ p }}<br>
+    {% endfor %}
+    <hr>
+</div>
+{% endfor %}
 {% endfor %}
 
 </div>
