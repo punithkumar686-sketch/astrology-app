@@ -20,11 +20,16 @@ def chart():
     dob = request.form.get("dob")
     tob = request.form.get("tob")
 
-    kundli, lagna = build_kundli(dob, tob)
+    lagna, planets = get_kundli(dob, tob)
 
-    return render_template("chart.html", kundli=kundli, lagna=lagna)
+bhava_chart = build_bhava_chart(planets)
 
-
+return render_template(
+    "chart.html",
+    lagna=lagna,
+    planets=planets,
+    bhava=bhava_chart
+)
 @app.route("/match")
 def match():
     score, status = compatibility_score()
