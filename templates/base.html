@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Astrology App</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #fff6e6;
+        }
+
+        .navbar {
+            background: #ff9933;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ff9933;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/kundli">Kundli</a>
+    <a href="/chart">Chart</a>
+    <a href="/match">Match Making</a>
+    <a href="/dasha">Dasha</a>
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
