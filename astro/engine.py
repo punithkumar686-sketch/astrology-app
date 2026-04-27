@@ -18,23 +18,33 @@ SIGNS = [
     "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"
 ]
 
+
 def get_sign(deg):
     return SIGNS[int(deg / 30)]
 
 
-def calculate_planets(dob, tob):
-    dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
-    jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60)
+# 🌟 REAL LAGNA CALCULATION
+def calculate_lagna(jd):
+    houses = swe.houses(jd, 28.6139, 77.2090)[0]  # default India coords
+    lagna = houses[0]
+    return get_sign(lagna)
 
-    result = {}
+
+def calculate_chart(dob, tob):
+    dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
+    jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute/60)
+
+    chart = {}
 
     for name, planet in PLANETS.items():
         pos, _ = swe.calc_ut(jd, planet)
         deg = pos[0]
 
-        result[name] = {
+        chart[name] = {
             "degree": round(deg, 2),
             "sign": get_sign(deg)
         }
 
-    return result
+    lagna = calculate_lagna(jd)
+
+    return chart, lagna
