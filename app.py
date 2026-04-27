@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from astro.charts import build_kundli
+from astro.dasha import get_vimshottari_dasha, dasha_prediction
 
 app = Flask(__name__)
 
@@ -31,6 +32,17 @@ def match():
 @app.route("/dasha")
 def dasha():
     return render_template("dasha.html")
+
+@app.route("/dasha")
+def dasha():
+    timeline = get_vimshottari_dasha()
+    prediction = dasha_prediction()
+
+    return render_template(
+        "dasha.html",
+        timeline=timeline,
+        prediction=prediction
+    )
 
 
 if __name__ == "__main__":
