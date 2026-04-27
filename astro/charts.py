@@ -1,16 +1,16 @@
-from astro.engine import calculate_planets
+from astro.engine import calculate_chart
 
 HOUSES = [f"{i}H" for i in range(1, 13)]
 
-def build_chart(dob, tob):
-    planets = calculate_planets(dob, tob)
+def build_kundli(dob, tob):
+    planets, lagna = calculate_chart(dob, tob)
 
-    chart = {h: [] for h in HOUSES}
+    house_map = {h: [] for h in HOUSES}
 
     i = 0
-    for name, data in planets.items():
+    for planet, data in planets.items():
         house = HOUSES[i % 12]
-        chart[house].append(f"{name} ({data['sign']})")
+        house_map[house].append(f"{planet} ({data['sign']})")
         i += 2
 
-    return chart
+    return house_map, lagna
