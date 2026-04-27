@@ -1,3 +1,6 @@
+import os
+
+
 from flask import Flask, render_template, request
 from astro.charts import build_kundli
 from astro.match import compatibility_score
@@ -33,7 +36,7 @@ def dasha():
     return render_template("dasha.html", dasha=data)
 
 
-import os
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
