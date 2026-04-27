@@ -29,9 +29,7 @@ def match():
     return render_template("match.html")
 
 
-@app.route("/dasha")
-def dasha():
-    return render_template("dasha.html")
+
 
 @app.route("/dasha")
 def dasha():
