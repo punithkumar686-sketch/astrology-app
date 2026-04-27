@@ -1,10 +1,12 @@
 def get_dasha():
     return [
-        {"planet": "Sun", "period": "6 years"},
-        {"planet": "Moon", "period": "10 years"},
-        {"planet": "Mars", "period": "7 years"},
-        {"planet": "Mercury", "period": "17 years"},
-        {"planet": "Jupiter", "period": "16 years"},
-        {"planet": "Venus", "period": "20 years"},
-        {"planet": "Saturn", "period": "19 years"},
+        ("Ketu", "7 years"),
+        ("Venus", "20 years"),
+        ("Sun", "6 years"),
+        ("Moon", "10 years"),
+        ("Mars", "7 years"),
+        ("Rahu", "18 years"),
+        ("Jupiter", "16 years"),
+        ("Saturn", "19 years"),
+        ("Mercury", "17 years"),
     ]
