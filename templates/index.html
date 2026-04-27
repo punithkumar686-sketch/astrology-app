@@ -2,31 +2,75 @@
 <html>
 <head>
     <title>Astrology App</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: white;
+        }
+
+        .header {
+            background: orange;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid orange;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: orange;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: darkorange;
+        }
+    </style>
 </head>
-<body style="background:black;color:white;font-family:sans-serif">
+<body>
 
-<h1>🔮 Astrology App</h1>
+<div class="header">
+    <h1>🪐 ASTROLOGY APP</h1>
+</div>
 
-<form method="POST">
-    <input name="name" placeholder="Name" required><br><br>
-    <input type="date" name="dob" required><br><br>
-    <input type="time" name="time" required><br><br>
-    <input name="place" placeholder="Place (e.g. Bangalore)" required><br><br>
+<div class="container">
 
-    <button type="submit">Generate Kundli</button>
-</form>
+    <form method="POST" action="/kundli">
 
-{% if kundli_data %}
-    <h2>{{ kundli_data.name }}'s Kundli</h2>
+        <label>Date of Birth</label>
+        <input type="date" name="dob" required>
 
-    {% for p in kundli_data.planets %}
-        <div style="border:1px solid white;padding:10px;margin:10px">
-            <h3>{{ p.name }}</h3>
-            <p>Sign: {{ p.sign }}</p>
-            <p>Degree: {{ p.normDegree }}</p>
-        </div>
-    {% endfor %}
-{% endif %}
+        <label>Time of Birth</label>
+        <input type="time" name="tob" required>
+
+        <label>Place of Birth</label>
+        <input type="text" name="place" required>
+
+        <button type="submit">Generate Kundli</button>
+
+    </form>
+
+</div>
 
 </body>
 </html>
