@@ -2,14 +2,22 @@
 
 {% block content %}
 
-<h2>🏠 12 House Kundli Chart (D1)</h2>
+<h2>🏠 12 House Kundli (Real Vedic System)</h2>
 
 <div class="grid">
 
-    {% for house, planet in chart.items() %}
-    <div class="card">
-        <b>{{ house }}</b><br>
-        {{ planet }}
+    {% for house, planets in kundli.items() %}
+    <div class="box">
+        <b>{{ house }}</b><br><br>
+
+        {% if planets %}
+            {% for p in planets %}
+                • {{ p }}<br>
+            {% endfor %}
+        {% else %}
+            Empty
+        {% endif %}
+
     </div>
     {% endfor %}
 
