@@ -1,8 +1,18 @@
-{% extends "base.html" %}
+<h1>⏳ Vimshottari Dasha System</h1>
 
-{% block content %}
-<div class="box">
-    <h2>⏳ Dasha System</h2>
-    <p>Planetary periods analysis coming soon...</p>
+<h2>🔮 Current Prediction</h2>
+<p><b>{{ prediction.current }}</b></p>
+<p>{{ prediction.interpretation }}</p>
+<p>💡 {{ prediction.advice }}</p>
+
+<hr>
+
+<h2>📊 Dasha Timeline</h2>
+
+{% for d in timeline %}
+<div style="margin-bottom:10px;">
+    <b>{{ d.planet }}</b><br>
+    {{ d.start }} → {{ d.end }} years ({{ d.duration }} yrs)
 </div>
-{% endblock %}
+<hr>
+{% endfor %}
