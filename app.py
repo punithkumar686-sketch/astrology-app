@@ -27,8 +27,7 @@ def match():
 
 @app.route("/dasha")
 def dasha():
-    data = get_dasha()
-    return render_template("dasha.html", dasha=data)
+    return render_template("dasha.html")
 
 
 if __name__ == "__main__":
