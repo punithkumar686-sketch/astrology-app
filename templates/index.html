@@ -1,42 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jyotish AI</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Astrology App</title>
 </head>
+<body style="background:black;color:white;font-family:sans-serif">
 
-<body>
+<h1>🔮 Astrology App</h1>
 
-<div class="navbar">
-    <h2>Jyotish AI</h2>
-    <a href="/">Home</a>
-</div>
+<form method="POST">
+    <input name="name" placeholder="Name" required><br><br>
+    <input type="date" name="dob" required><br><br>
+    <input type="time" name="time" required><br><br>
+    <input name="place" placeholder="Place (e.g. Bangalore)" required><br><br>
 
-<div class="hero">
-    <h1>Your Destiny, Written in the Stars</h1>
+    <button type="submit">Generate Kundli</button>
+</form>
 
-    <form method="POST">
-        <input name="name" placeholder="Full Name" required>
-        <input type="date" name="dob" required>
-        <input type="time" name="time" required>
-        <input name="place" placeholder="Birth Place" required>
+{% if kundli_data %}
+    <h2>{{ kundli_data.name }}'s Kundli</h2>
 
-        <button type="submit">Generate Kundli</button>
-    </form>
-</div>
-
-{% if data %}
-<div class="result">
-    <h2>{{ data.name }}'s Kundli</h2>
-
-    {% for planet in data.kundli %}
-        <div class="card">
-            <h3>{{ planet.name }}</h3>
-            <p>Sign: {{ planet.sign }}</p>
-            <p>Degree: {{ planet.normDegree }}</p>
+    {% for p in kundli_data.planets %}
+        <div style="border:1px solid white;padding:10px;margin:10px">
+            <h3>{{ p.name }}</h3>
+            <p>Sign: {{ p.sign }}</p>
+            <p>Degree: {{ p.normDegree }}</p>
         </div>
     {% endfor %}
-</div>
 {% endif %}
 
 </body>
