@@ -12,11 +12,18 @@ def get_sign(deg):
     return SIGNS[int(deg / 30)]
 
 
-def calculate_chart(dob, tob):
+# 🌍 REAL LAGNA + PLANETS
+def calculate_chart(dob, tob, lat=12.9716, lon=77.5946):
     dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
 
     jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute/60)
 
+    # 🏠 REAL ASCENDANT (LAGNA)
+    houses, ascmc = swe.houses(jd, lat, lon)
+    lagna_deg = ascmc[0]
+    lagna_sign = get_sign(lagna_deg)
+
+    # 🪐 PLANETS
     planets = {
         "Sun": swe.SUN,
         "Moon": swe.MOON,
@@ -38,4 +45,7 @@ def calculate_chart(dob, tob):
             "sign": get_sign(deg)
         }
 
-    return result
+    return result, {
+        "lagna_degree": round(lagna_deg, 2),
+        "lagna_sign": lagna_sign
+    }
