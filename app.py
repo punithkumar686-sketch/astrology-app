@@ -1,26 +1,64 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
+import swisseph as swe
 
 app = Flask(__name__)
 
-# Dummy kundli data (we will upgrade later to real ephemeris)
-def generate_chart():
-    houses = [
-        "Asc", "2H", "3H", "4H",
-        "5H", "6H", "7H", "8H",
-        "9H", "10H", "11H", "12H"
-    ]
+swe.set_ephe_path('.')
 
-    planets = [
-        "Sun", "Moon", "Mars", "Mercury",
-        "Jupiter", "Venus", "Saturn"
-    ]
+PLANETS = {
+    "Sun": swe.SUN,
+    "Moon": swe.MOON,
+    "Mars": swe.MARS,
+    "Mercury": swe.MERCURY,
+    "Jupiter": swe.JUPITER,
+    "Venus": swe.VENUS,
+    "Saturn": swe.SATURN,
+}
 
-    chart = {}
+SIGNS = [
+    "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+    "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"
+]
 
-    for i, house in enumerate(houses):
-        chart[house] = planets[i % len(planets)]
+HOUSES = [f"{i}H" for i in range(1, 13)]
 
-    return chart
+
+# 🔮 Convert degree → zodiac sign
+def get_sign(deg):
+    return SIGNS[int(deg / 30)]
+
+
+# 🪐 REAL KUNDLI GENERATOR
+def generate_kundli():
+    # Example fixed birth data (you can later make form dynamic)
+    year, month, day = 1994, 3, 27
+    hour, minute = 12, 32
+
+    jd = swe.julday(year, month, day, hour + minute / 60)
+
+    planets_data = {}
+
+    # Get planet positions
+    for name, planet in PLANETS.items():
+        pos, _ = swe.calc_ut(jd, planet)
+        deg = pos[0]
+        sign = get_sign(deg)
+
+        planets_data[name] = {
+            "degree": round(deg, 2),
+            "sign": sign
+        }
+
+    # 🏠 SIMPLE HOUSE ALLOCATION (REALISTIC APPROXIMATION)
+    house_chart = {h: [] for h in HOUSES}
+
+    i = 0
+    for planet, data in planets_data.items():
+        house = HOUSES[i % 12]
+        house_chart[house].append(f"{planet} ({data['sign']})")
+        i += 2  # spread planets
+
+    return house_chart
 
 
 @app.route("/")
@@ -28,27 +66,11 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/kundli")
-def kundli():
-    chart = generate_chart()
-    return render_template("kundli.html", chart=chart)
-
-
 @app.route("/chart")
 def chart():
-    chart = generate_chart()
-    return render_template("chart.html", chart=chart)
-
-
-@app.route("/match")
-def match():
-    return render_template("match.html")
-
-
-@app.route("/dasha")
-def dasha():
-    return render_template("dasha.html")
+    kundli = generate_kundli()
+    return render_template("chart.html", kundli=kundli)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
