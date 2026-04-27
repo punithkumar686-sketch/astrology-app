@@ -12,16 +12,11 @@ def get_sign(deg):
     return SIGNS[int(deg / 30)]
 
 
-def get_kundli(dob, tob, lat=12.9716, lon=77.5946):
+def calculate_chart(dob, tob):
     dt = datetime.strptime(f"{dob} {tob}", "%Y-%m-%d %H:%M")
 
     jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute/60)
 
-    # 🌟 REAL LAGNA (ASCENDANT)
-    houses = swe.houses(jd, lat, lon)[0]
-    lagna = get_sign(houses[0])
-
-    # 🪐 PLANETS
     planets = {
         "Sun": swe.SUN,
         "Moon": swe.MOON,
@@ -32,14 +27,15 @@ def get_kundli(dob, tob, lat=12.9716, lon=77.5946):
         "Saturn": swe.SATURN,
     }
 
-    data = {}
+    result = {}
 
     for name, p in planets.items():
         pos, _ = swe.calc_ut(jd, p)
         deg = pos[0]
-        data[name] = {
+
+        result[name] = {
             "degree": round(deg, 2),
             "sign": get_sign(deg)
         }
 
-    return lagna, data
+    return result
