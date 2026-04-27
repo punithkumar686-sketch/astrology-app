@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from astro.charts import build_chart
+from astro.charts import build_kundli
+from astro.match import compatibility_score
 from astro.dasha import get_dasha
 
 app = Flask(__name__)
@@ -15,19 +16,21 @@ def chart():
     dob = request.form.get("dob")
     tob = request.form.get("tob")
 
-    kundli = build_chart(dob, tob)
+    kundli, lagna = build_kundli(dob, tob)
 
-    return render_template("chart.html", kundli=kundli)
+    return render_template("chart.html", kundli=kundli, lagna=lagna)
 
 
 @app.route("/match")
 def match():
-    return render_template("match.html")
+    score, status = compatibility_score()
+    return render_template("match.html", score=score, status=status)
 
 
 @app.route("/dasha")
 def dasha():
-    return render_template("dasha.html")
+    data = get_dasha()
+    return render_template("dasha.html", dasha=data)
 
 
 if __name__ == "__main__":
