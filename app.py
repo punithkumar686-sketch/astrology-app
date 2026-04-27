@@ -5,6 +5,7 @@ from flask import Flask, render_template, request
 from astro.charts import build_kundli
 from astro.match import compatibility_score
 from astro.dasha import get_dasha
+from astro.bhava import build_bhava_chart
 
 app = Flask(__name__)
 
